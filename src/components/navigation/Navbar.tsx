@@ -16,9 +16,9 @@ export const Navbar = ({ user }: NavbarProps) => {
     router.push("/login");
   };
   return (
-    <div className="p-4 bg-slate-200 flex justify-between content-center">
+    <nav className="p-4 bg-slate-200 flex justify-between content-center">
       <div className="font-semibold m-2">A Navbar</div>
       {user && <Button onClick={handleLogout}>Log Out</Button>}
-    </div>
+    </nav>
   );
 };
