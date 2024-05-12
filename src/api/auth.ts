@@ -52,7 +52,6 @@ export async function getCurrentUser(): Promise<User | undefined> {
 
   try {
     const decoded = decodeJwt(token);
-    console.log(decoded);
     return {
       id: decoded.id as number,
       username: decoded.username as string,

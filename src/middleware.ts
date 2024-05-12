@@ -17,7 +17,6 @@ export const config = {
 };
 
 export async function middleware(request: NextRequest) {
-  console.log("are you even running?");
   const user = await getCurrentUser();
   const loggedIn = !!user;
   if (loggedIn && routesWithoutAuth.includes(request.nextUrl.pathname)) {
