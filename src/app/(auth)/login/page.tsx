@@ -49,7 +49,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center">
+    <main className="flex justify-center">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
