@@ -29,8 +29,8 @@ export function FormTextInput(props: FormTextInputProps) {
       render={({ field }) => {
         return (
           <FormItem>
-            <FormLabel>{label}</FormLabel>
-            <FormDescription>{description}</FormDescription>
+            {label ? <FormLabel>{label}</FormLabel> : null}
+            {description ? <FormDescription>{description}</FormDescription> : null}
             <FormControl>
               {/* Using onInput because onChange doesn't trigger when autofilling information */}
               {multiline ? (
