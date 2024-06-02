@@ -1,25 +1,20 @@
-// components/PaginatedTable.tsx
-import React, { useState } from "react"
-import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell } from "./table"
-import { Button } from "./button"
+import React, { useState } from "react";
+import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell } from "./table";
+import { Button } from "./button";
 
 interface RowData {
-  id: number;
-  room: number;
-  lastName: string;
-  type: string;
-  status: string;
-  date: string;
+  [key: string]: any;
 }
 
-const PaginatedTable: React.FC = () => {
+interface PaginatedTableProps {
+  headers: string[];
+  data: RowData[];
+  onLastColumnButtonClick: (rowData: RowData) => void;
+}
+
+const PaginatedTable: React.FC<PaginatedTableProps> = ({ headers, data, onLastColumnButtonClick }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
-  const data: RowData[] = [
-    { id: 1, room: 101, lastName: 'Smith', type: 'Standard', status: 'Occupied', date: '2024-05-30' },
-    // Add more data as needed
-  ];
-
   const totalPages = Math.ceil(data.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedData = data.slice(startIndex, startIndex + rowsPerPage);
@@ -30,25 +25,28 @@ const PaginatedTable: React.FC = () => {
         <Table className="min-w-full bg-white rounded-lg shadow-md">
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Room Number</TableHead>
-              <TableHead>Last Name</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>View Chat</TableHead>
+              {headers.map((header, index) => (
+                <TableHead key={index}>{header}</TableHead>
+              ))}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedData.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.room}</TableCell>
-                <TableCell>{row.lastName}</TableCell>
-                <TableCell>{row.type}</TableCell>
-                <TableCell>{row.status}</TableCell>
-                <TableCell>{row.date}</TableCell>
-                <TableCell className="text-gray-500 cursor-pointer">View</TableCell>
+            {paginatedData.map((row, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {headers.map((header, cellIndex) => (
+                  <TableCell key={cellIndex}>
+                    {header === headers[headers.length - 1] ? (
+                      <button
+                        className="text-blue-500 hover:underline"
+                        onClick={() => onLastColumnButtonClick(row)}
+                      >
+                        {row[header]}
+                      </button>
+                    ) : (
+                      row[header]
+                    )}
+                  </TableCell>
+                ))}
               </TableRow>
             ))}
           </TableBody>

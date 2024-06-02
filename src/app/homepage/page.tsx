@@ -4,6 +4,17 @@ import React from 'react';
 import PaginatedTable from '@/components/ui/paginated-table';
 
 export default function Page() {
+  const headers = ["ID", "Room Number", "Last Name", "Type", "Status", "Date", "View Chat"];
+  const data = [
+    { ID: 1, "Room Number": 101, "Last Name": 'Smith', Type: 'Standard', Status: 'Occupied', Date: '2024-05-30', "View Chat": 'View' },
+    // Add more data as needed
+  ];
+
+  const handleLastColumnButtonClick = (rowData: { [key: string]: any }) => {
+    // Handle the button click event here
+    alert(`Button clicked for row with ID: ${rowData.ID}`);
+  };
+
   return (
     <main className="flex flex-col p-6">
       <div className="bg-gray-500 h-20 flex items-center mb-6 rounded-lg">
@@ -20,7 +31,7 @@ export default function Page() {
           <span>Chart 3 Placeholder</span>
         </div>
       </div>
-      <PaginatedTable />
+      <PaginatedTable headers={headers} data={data} onLastColumnButtonClick={handleLastColumnButtonClick} />
     </main>
   );
 }
