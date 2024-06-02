@@ -3,7 +3,7 @@ import ChatBoxForm from './ChatBoxForm';
 import ChatMessage from './ChatMessage';
 import { useChat } from '@/hooks/useChat';
 import { ByUser, Message } from '@/types/messages/message';
-import { getCookie } from 'cookies-next';
+import { getMessagesFromChat } from '@/lib/chat';
 
 type P = {
   // ID of the chat to retrieve history of messages from. Not the TG Chat ID, but the actual chat Id stored in database
@@ -13,18 +13,25 @@ type P = {
 export default function ChatBox({chatId}: P) {
   const {data: chat, isPending} = useChat(chatId);
 
-  const [messages, setMessages] = useState<Message[]>(chat?.messages || [])
+  const [messages, setMessages] = useState<Message[]>([])
+  
+  useEffect(() => {
+    if (chat) {
+      setMessages(getMessagesFromChat(chat));
+    }
 
+  }, [chat])
+  
   useEffect(() => {
     try {
       const socket = new WebSocket('ws://localhost:8080/api/ws');
-  
   
       socket.onopen = () => {
         console.log('WebSocket connection established');
       };
   
       socket.onmessage = (event) => {
+        setMessages((prevMessages) => [...prevMessages, event.data])
         console.log('Message from server: ', event.data);
       };
   
@@ -39,7 +46,7 @@ export default function ChatBox({chatId}: P) {
         socket.close();
       };
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
 
   }, [])

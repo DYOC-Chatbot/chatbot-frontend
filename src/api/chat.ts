@@ -6,12 +6,12 @@ export class ChatAPI extends BaseAPI {
     static async getAll(): Promise<Chat[]> {
         const res = await super.get(`${API}/chats`);
         
-        return res.data;
+        return res.data.data.items;
     }
     
     static async getOne(chatId: number): Promise<Chat> {
         const res = await super.get(`${API}/chats/${chatId}`);
         
-        return res.data;
+        return res.data.data;
     }
 }
