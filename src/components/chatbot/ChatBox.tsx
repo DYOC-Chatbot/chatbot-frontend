@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ChatBoxForm from './ChatBoxForm';
 import ChatMessage from './ChatMessage';
 import { useChat } from '@/hooks/useChat';
+import { useSendMessage } from '@/hooks/useBot';
 import { ByUser, Message } from '@/types/messages/message';
 import { getMessagesFromChat } from '@/lib/chat';
 
@@ -12,6 +13,7 @@ type P = {
 
 export default function ChatBox({chatId}: P) {
   const {data: chat, isPending} = useChat(chatId);
+  const sendMessageMutation = useSendMessage(chatId)
 
   const [messages, setMessages] = useState<Message[]>([])
   
@@ -24,6 +26,7 @@ export default function ChatBox({chatId}: P) {
   
   useEffect(() => {
     try {
+      // TODO: Replace URL with constant string
       const socket = new WebSocket('ws://localhost:8080/api/ws');
   
       socket.onopen = () => {
@@ -52,6 +55,7 @@ export default function ChatBox({chatId}: P) {
   }, [])
 
   const onSubmit = async (values: any) => {
+    await sendMessageMutation.mutate(values.text);
     setMessages([...messages, {
       messageBody: values.text,
       by: ByUser.STAFF,
