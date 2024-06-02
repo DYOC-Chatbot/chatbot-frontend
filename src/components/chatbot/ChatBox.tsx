@@ -66,13 +66,15 @@ export default function ChatBox({chatId}: P) {
   }
 
   return (
-    <div className='flex flex-col'>
-      {messages.map((message, index) => (
-        <ChatMessage 
-          key={index}
-          message={message.messageBody} 
-          isSender={message.by === ByUser.BOT || message.by === ByUser.STAFF} />
-      ))}
+    <div>
+      <div className='flex flex-col max-h-[480px] overflow-auto'>
+          {messages.map((message, index) => (
+            <ChatMessage 
+              key={index}
+              message={message.messageBody} 
+              isSender={message.by === ByUser.BOT || message.by === ByUser.STAFF} />
+          ))}
+      </div>
       <ChatBoxForm onSubmit={onSubmit} />
     </div>
   )
