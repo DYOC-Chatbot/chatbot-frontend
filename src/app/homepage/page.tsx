@@ -1,12 +1,12 @@
 "use client";
 
 import React from 'react';
-import Table from '@/components/ui/table';
+import PaginatedTable from '@/components/ui/paginated-table';
 
 export default function Page() {
   return (
     <main className="flex flex-col p-6">
-      <div className="bg-slate-700 h-20 flex items-center mb-6 rounded-lg">
+      <div className="bg-gray-500 h-20 flex items-center mb-6 rounded-lg">
         <h1 className="text-right text-xl w-full mr-4">Welcome!</h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -20,7 +20,7 @@ export default function Page() {
           <span>Chart 3 Placeholder</span>
         </div>
       </div>
-      <Table />
+      <PaginatedTable />
     </main>
   );
 }
