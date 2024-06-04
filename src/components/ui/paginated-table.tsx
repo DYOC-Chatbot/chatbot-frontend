@@ -40,10 +40,10 @@ const PaginatedTable: React.FC<PaginatedTableProps> = ({ headers, data, onLastCo
                         className="text-blue-500 hover:underline"
                         onClick={() => onLastColumnButtonClick(row)}
                       >
-                        {row[header]}
+                        {row[header as keyof RowData]}
                       </button>
                     ) : (
-                      row[header]
+                      row[header as keyof RowData]
                     )}
                   </TableCell>
                 ))}

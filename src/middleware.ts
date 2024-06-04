@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/api/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-const routesWithoutAuth = ["/login", "/signup", "/homepage"];
+const routesWithoutAuth = ["/login", "/signup"];
 
 export const config = {
   matcher: [
