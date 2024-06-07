@@ -9,6 +9,18 @@ export class ChatAPI extends BaseAPI {
         return res.data.data.items;
     }
 
+    static async getAllRequestQueries(): Promise<RequestQuery[]> {
+        const res = await super.get(`${API}/chats`);
+        const chats: Chat[] = res.data.data.items;
+
+        const requestQueries: RequestQuery[] = [];
+        chats.forEach(chat => {
+            requestQueries.push(...chat.requestQueries);
+        });
+
+        return requestQueries;
+    }
+
     static async getAllPendingRequestQuery(): Promise<RequestQuery[]> {
         const res = await super.get(`${API}/chats`);
         const chats: Chat[] = res.data.data.items;
@@ -22,16 +34,18 @@ export class ChatAPI extends BaseAPI {
         return pendingRequestQueries;
     }
 
-    /* todo: implement this
-    static async getAllWaitingforReview(): Promise<Chat[]> {
+    static async getAllWaitingforReview(): Promise<RequestQuery[]> {
         const res = await super.get(`${API}/chats`);
         const chats: Chat[] = res.data.data.items;
 
-        const waitingForReviewChats = chats.filter(chat => chat.status === "waiting for review");
+        const waitingForReviewRequestQueries: RequestQuery[] = [];
+        chats.forEach(chat => {
+            const waitingForReviewRequestQueriesForOne = chat.requestQueries.filter(rq => rq.status === "closed");
+            waitingForReviewRequestQueries.push(...waitingForReviewRequestQueriesForOne);
+        });
 
-        return waitingForReviewChats;
+        return waitingForReviewRequestQueries;
     }
-    */
 
     static async getOne(chatId: number): Promise<Chat> {
         const res = await super.get(`${API}/chats/${chatId}`);
