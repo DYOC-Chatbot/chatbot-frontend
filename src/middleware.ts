@@ -21,8 +21,9 @@ export async function middleware(request: NextRequest) {
   const loggedIn = !!user;
   if (loggedIn && routesWithoutAuth.includes(request.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
-  }
-  if (!loggedIn && !routesWithoutAuth.includes(request.nextUrl.pathname)) {
+  } else if (!loggedIn && !routesWithoutAuth.includes(request.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/login", request.url));
+  } else {
+      return NextResponse.next()
   }
 }
