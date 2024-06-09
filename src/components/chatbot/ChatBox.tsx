@@ -5,6 +5,7 @@ import { useChat } from '@/hooks/useChat';
 import { useSendMessage } from '@/hooks/useBot';
 import { ByUser, Message } from '@/types/messages/message';
 import { getMessagesFromChat } from '@/lib/chat';
+import { MESSAGE_WS_API_URL } from '@/constants/global';
 
 type P = {
   // ID of the chat to retrieve history of messages from. Not the TG Chat ID, but the actual chat Id stored in database
@@ -27,7 +28,7 @@ export default function ChatBox({chatId}: P) {
   useEffect(() => {
     try {
       // TODO: Replace URL with constant string
-      const socket = new WebSocket('ws://localhost:8080/api/ws');
+      const socket = new WebSocket(MESSAGE_WS_API_URL());
   
       socket.onopen = () => {
         console.log('WebSocket connection established');
