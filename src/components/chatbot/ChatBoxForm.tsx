@@ -12,7 +12,7 @@ type P = {
   onSubmit: (values: any) => void;
 }
 
-const formSchema = z.object({
+export const formSchema = z.object({
     text: z.string().min(1, { message: "Required" }),
 })
 

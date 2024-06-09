@@ -1,13 +1,15 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import ChatBoxForm from './ChatBoxForm';
+import ChatBoxForm, { formSchema } from './ChatBoxForm';
 import ChatMessage from './ChatMessage';
 import { useChat } from '@/hooks/useChat';
 import { useSendMessage } from '@/hooks/useBot';
 import { ByUser, Message } from '@/types/messages/message';
 import { getMessagesFromChat } from '@/lib/chat';
-import { MESSAGE_WS_API_URL } from '@/constants/global';
+import { getMessageWebsocketUrl } from '@/constants/global';
+import { z } from 'zod';
+import { useWebsocket } from '@/hooks/useWebsocket';
 
 type P = {
   // ID of the chat to retrieve history of messages from. Not the TG Chat ID, but the actual chat Id stored in database
@@ -19,45 +21,19 @@ export default function ChatBox({chatId}: P) {
   const sendMessageMutation = useSendMessage(chatId)
 
   const [messages, setMessages] = useState<Message[]>([])
-  
+
+  // const [ws] = useWebsocket(getMessageWebsocketUrl(), setMessages)
+  useWebsocket(getMessageWebsocketUrl(), setMessages)
+
+
   useEffect(() => {
     if (chat) {
       setMessages(getMessagesFromChat(chat));
     }
 
   }, [chat])
-  
-  useEffect(() => {
-    try {
-      // TODO: Replace URL with constant string
-      const socket = new WebSocket(MESSAGE_WS_API_URL());
-  
-      socket.onopen = () => {
-        console.log('WebSocket connection established');
-      };
-  
-      socket.onmessage = (event) => {
-        setMessages((prevMessages) => [...prevMessages, event.data])
-        console.log('Message from server: ', event.data);
-      };
-  
-      socket.onclose = () => {
-        console.log('WebSocket connection closed');
-      };
-  
-      socket.onerror = (ev) => {
-        console.error('error event: ', ev);
-      };
-      return () => {
-        socket.close();
-      };
-    } catch (error) {
-      console.error(error)
-    }
 
-  }, [])
-
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await sendMessageMutation.mutate(values.text);
     setMessages([...messages, {
       messageBody: values.text,
