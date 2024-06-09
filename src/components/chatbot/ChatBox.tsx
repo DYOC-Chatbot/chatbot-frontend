@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ChatBoxForm, { formSchema } from './ChatBoxForm';
 import ChatMessage from './ChatMessage';
 import { useChat } from '@/hooks/useChat';
@@ -21,17 +21,20 @@ export default function ChatBox({chatId}: P) {
   const sendMessageMutation = useSendMessage(chatId)
 
   const [messages, setMessages] = useState<Message[]>([])
-
-  // const [ws] = useWebsocket(getMessageWebsocketUrl(), setMessages)
+  const bottomRef = useRef<any>(null);
+  
   useWebsocket(getMessageWebsocketUrl(), setMessages)
-
 
   useEffect(() => {
     if (chat) {
       setMessages(getMessagesFromChat(chat));
     }
-
   }, [chat])
+
+  // Auto-scrol to bottom of chat upon new messages
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages])
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await sendMessageMutation.mutate(values.text);
@@ -53,6 +56,7 @@ export default function ChatBox({chatId}: P) {
               message={message.messageBody} 
               isSender={message.by === ByUser.BOT || message.by === ByUser.STAFF} />
           ))}
+          <div ref={bottomRef} />
       </div>
       <ChatBoxForm onSubmit={onSubmit} />
     </div>
