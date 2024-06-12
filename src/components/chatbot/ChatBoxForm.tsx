@@ -9,7 +9,7 @@ import { FormTextInput } from '../form/form-text-input';
 import { Button } from '../ui/button';
 
 type P = {
-  onSubmit: (values: any) => void;
+  onSubmit: (values: z.infer<typeof formSchema>) => void;
 }
 
 export const formSchema = z.object({
