@@ -33,18 +33,21 @@ export default function ChatBox({chatId}: P) {
 
   // Auto-scrol to bottom of chat upon new messages
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const latestMessage = messages[messages.length - 1];
+    // We only scroll into view hen the new message was sent by the staff. So that we av oid interfering with normal 
+    // scrolling behaviour and that it only scrolls when the user expects it to
+    if (latestMessage.by === ByUser.STAFF) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    } 
   }, [messages])
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await sendMessageMutation.mutate(values.text);
-    setMessages([...messages, {
-      messageBody: values.text,
-      by: ByUser.STAFF,
-      telegramMessageId: 0,
-      timestamp: new Date(),
-    }])
-
+    try {
+      await sendMessageMutation.mutate(values.text);
+    } catch (err) {
+      console.error(err);
+      alert("Soemthing went wrong")
+    }
   }
 
   return (
